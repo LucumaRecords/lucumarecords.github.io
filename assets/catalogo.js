@@ -1,5 +1,5 @@
-import { AVAILABILITY, COLLECTIONS, EXTRAS, buildWhatsAppUrl, capitalizeExtraDescriptions, filterAndSortProducts, formatCountryYear, formatPrice, listCatalogGenres, matchesCollection, productTitle, validateCatalog } from "./catalogo-core.mjs?v=5";
-import { addToCart, hasInCart } from "./cart.js?v=1";
+import { AVAILABILITY, COLLECTIONS, EXTRAS, buildWhatsAppUrl, capitalizeExtraDescriptions, filterAndSortProducts, formatCountryYear, formatPrice, listCatalogGenres, matchesCollection, productTitle, validateCatalog } from "./catalogo-core.mjs?v=6";
+import { addToCart, hasInCart } from "./cart.js?v=3";
 
 const menuToggle = document.querySelector(".menu-toggle");
 const mainNav = document.getElementById("main-nav");
@@ -146,6 +146,13 @@ function availabilityBadge(status, extraClass = "") {
   return badge;
 }
 
+function addPhotoAvailabilityLabel(container, status) {
+  if (status !== "sold") return;
+  const marker = makeElement("span", "stock-ribbon stock-ribbon--sold", "VENDIDO");
+  marker.setAttribute("aria-hidden", "true");
+  container.append(marker);
+}
+
 function productLabel(product) {
   return [product.artist, product.album].filter(value => typeof value === "string" && value.trim()).join(" · ") || "Vinilo sin título";
 }
@@ -212,11 +219,11 @@ function makeCartAddButton(product, isDetail = false) {
   button.dataset.cartTitle = productLabel(product);
   const added = hasInCart(product.id);
   const available = product.availability === "available";
-  button.textContent = added ? "EN EL CARRITO" : available ? "AGREGAR AL CARRITO" : product.availability === "sold" ? "VENDIDO" : "NO DISPONIBLE";
-  button.disabled = added || !available;
-  button.setAttribute("aria-label", added
-    ? `${productLabel(product)}, ya está en el carrito`
-    : available ? `Agregar ${productLabel(product)} al carrito` : `${productLabel(product)}, no disponible para agregar`);
+  button.textContent = !available ? "NO DISPONIBLE" : added ? "EN EL CARRITO" : "AGREGAR AL CARRITO";
+  button.disabled = !available || added;
+  button.setAttribute("aria-label", !available
+    ? `${productLabel(product)}, no disponible para agregar`
+    : added ? `${productLabel(product)}, ya está en el carrito` : `Agregar ${productLabel(product)} al carrito`);
   button.addEventListener("click", async event => {
     event.stopPropagation();
     await addToCart(product.id);
@@ -233,6 +240,7 @@ function makeProductCard(product) {
 
   const photoWrap = makeElement("div", "product-card__photo");
   displayPhoto(photoWrap, product.photos[0], `Tapa de ${productLabel(product)}`, `Imagen no disponible para ${productLabel(product)}`);
+  addPhotoAvailabilityLabel(photoWrap, product.availability);
 
   const info = makeElement("div", "product-card__info");
   if (product.artist && product.album) {
@@ -245,7 +253,7 @@ function makeProductCard(product) {
   if (pressing) info.append(makeElement("p", "product-card__pressing", pressing));
   const price = formatPrice(product.priceARS);
   if (price) info.append(makeElement("span", "product-card__price", price));
-  if (product.availability) info.append(availabilityBadge(product.availability, "product-card__availability"));
+  if (product.availability === "sold") info.append(availabilityBadge(product.availability, "product-card__availability"));
 
   openButton.append(photoWrap, info);
   openButton.addEventListener("click", () => openProductDetails(product));
@@ -306,6 +314,7 @@ function openProductDetails(product) {
   const mainPhoto = makeElement("div", "detail-gallery__main");
   const label = productLabel(product);
   displayPhoto(mainPhoto, product.photos[0], `Tapa de ${label}`, `Imagen no disponible para ${label}`);
+  addPhotoAvailabilityLabel(mainPhoto, product.availability);
   gallery.append(mainPhoto);
 
   if (product.photos.length > 1) {
@@ -337,15 +346,13 @@ function openProductDetails(product) {
   copy.append(heading);
   if (product.artist && product.album) copy.append(makeElement("p", "detail-copy__album", product.album));
   const metadata = formatCountryYear(product.country, product.year, { editionType: product.editionType });
-  if (metadata) copy.append(makeElement("p", "detail-copy__meta", metadata));
+  if (metadata) copy.append(makeElement("p", "detail-copy__meta detail-copy__pressing", metadata));
   const price = formatPrice(product.priceARS);
   const priceNode = price ? makeElement("p", "detail-copy__price", price) : null;
   if (priceNode) copy.append(priceNode);
   let availabilityNode = null;
   if (product.availability === "sold") {
     availabilityNode = makeElement("p", "sold-notice", "VINILO VENDIDO");
-  } else if (product.availability) {
-    availabilityNode = availabilityBadge(product.availability);
   }
   if (availabilityNode) copy.append(availabilityNode);
   const cartAddButton = makeCartAddButton(product, true);

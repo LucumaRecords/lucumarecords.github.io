@@ -34,6 +34,18 @@ test("explicit collection and availability are kept while unknown collections st
   assert.equal(unknown.collection, undefined);
 });
 
+test("a legacy reserved status is held for review instead of creating a third state", () => {
+  const [product] = parseVinylList("Artist - Album\nReservado");
+  assert.equal(product.availability, undefined);
+  assert.match(product.issues.join(" "), /Disponible.*Vendido/u);
+});
+
+test("an explicit unrecognized availability status is held for review", () => {
+  const [product] = parseVinylList("Artist - Album\nDisponibilidad: pausado");
+  assert.equal(product.availability, undefined);
+  assert.match(product.issues.join(" "), /pausado.*Disponible.*Vendido/u);
+});
+
 test("photo folder notes do not inspect or associate photographs", () => {
   const items = inspectTextBatch("Artist - Album\nCarpeta de fotos: Album folder", [], emptyHistory);
   assert.equal(items[0].state, "ready");

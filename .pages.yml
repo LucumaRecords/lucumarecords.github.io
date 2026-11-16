@@ -155,8 +155,6 @@ content:
           values:
             - name: available
               label: Disponible
-            - name: reserved
-              label: Reservado
             - name: sold
               label: Vendido
 

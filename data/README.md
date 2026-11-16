@@ -33,7 +33,7 @@ Después de aprobar la tanda, aplicá los registros:
 node scripts/import-text-batch.mjs apply
 ```
 
-El importador vuelve a sincronizar `origin/main` y consulta los registros y el historial antes de escribir. Crea solo las fichas seguras en `data/vinilos/`, sin fotografías. Las nuevas fichas aprobadas quedan con `published: true` y `availability: available`, salvo que el texto indique Reservado o Vendido. No modifica productos existentes. Los posibles duplicados o errores individuales quedan sin crear para revisarlos; el resto de la tanda puede continuar.
+El importador vuelve a sincronizar `origin/main` y consulta los registros y el historial antes de escribir. Crea solo las fichas seguras en `data/vinilos/`, sin fotografías. Las nuevas fichas aprobadas quedan con `published: true` y disponibilidad `available` o `sold`, según indique el texto. No se utiliza un estado de reserva: si una tanda contiene un estado «reservado», ese registro queda pendiente de revisión hasta indicar «Disponible» o «Vendido». No modifica productos existentes. Los posibles duplicados o errores individuales quedan sin crear para revisarlos; el resto de la tanda puede continuar.
 
 Tras aplicar una tanda, Codex hace commit y push a `main` y confirma GitHub Actions. Después, cargá manualmente las fotos, el género y la colección desde Pages CMS.
 

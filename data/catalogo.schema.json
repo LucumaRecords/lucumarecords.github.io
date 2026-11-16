@@ -31,7 +31,7 @@
         "otherExtras": { "type": "string", "minLength": 1 },
         "notes": { "type": "string", "minLength": 1 },
         "priceARS": { "type": "integer", "minimum": 1 },
-        "availability": { "enum": ["available", "reserved", "sold"] },
+        "availability": { "enum": ["available", "sold"] },
         "published": { "type": "boolean", "default": false },
         "photos": {
           "type": "array",

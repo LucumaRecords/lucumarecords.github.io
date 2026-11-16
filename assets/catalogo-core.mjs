@@ -12,7 +12,6 @@ export const GENRES = COLLECTIONS;
 
 export const AVAILABILITY = Object.freeze({
   available: "Disponible",
-  reserved: "Reservado",
   sold: "Vendido"
 });
 
@@ -110,10 +109,15 @@ export function normalizeCatalogProduct(source) {
   }
 
   if (!isBlank(source.availability)) {
-    if (typeof source.availability !== "string" || !Object.hasOwn(AVAILABILITY, source.availability.trim())) {
+    if (typeof source.availability !== "string") {
       throw new Error("La disponibilidad indicada no es válida.");
     }
-    product.availability = source.availability.trim();
+    const availability = source.availability.trim();
+    // Keep legacy reservations unchanged in memory, but never make them purchasable.
+    product.availability = availability;
+    if (!Object.hasOwn(AVAILABILITY, availability) && availability !== "reserved") {
+      throw new Error("La disponibilidad indicada no es válida.");
+    }
   }
 
   if (source.extras !== undefined && source.extras !== null && source.extras !== "") {
@@ -264,10 +268,7 @@ export function buildWhatsAppUrl(product) {
   const edition = formatCountryYear(product.country, product.year, { separator: " " });
   const editionText = edition ? `, edición ${edition}` : "";
   const priceText = product.priceARS > 0 ? `, publicado a ${formatPrice(product.priceARS).replace(/\s/gu, "")}` : "";
-  const status = product.availability === "reserved"
-    ? "Veo que figura como reservado. ¿Podrían confirmarme si sigue disponible?"
-    : "¿Sigue disponible?";
-  const message = `Hola, ¿cómo están? Me interesa el vinilo ${identity}${editionText}${priceText}. ${status}`;
+  const message = `Hola, ¿cómo están? Me interesa el vinilo ${identity}${editionText}${priceText}. ¿Sigue disponible?`;
 
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }

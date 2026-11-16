@@ -303,10 +303,18 @@ function parseRecord(lines, index) {
 
     const availabilityLine = line.match(/^(?:disponibilidad\s*[:\-]?\s*)?(vendido|reservado|disponible)$/i);
     if (availabilityLine) {
-      record.availability = availabilityLine[1].toLowerCase();
-      if (record.availability === "vendido") record.availability = "sold";
-      if (record.availability === "reservado") record.availability = "reserved";
-      if (record.availability === "disponible") record.availability = "available";
+      const value = availabilityLine[1].toLowerCase();
+      if (value === "reservado") {
+        issues.push("El estado «reservado» ya no se usa; indicá «Disponible» o «Vendido».");
+      } else {
+        record.availability = value === "vendido" ? "sold" : "available";
+      }
+      continue;
+    }
+
+    const unknownAvailabilityLine = line.match(/^(?:disponibilidad|estado)\s*[:\-]\s*(.+)$/i);
+    if (unknownAvailabilityLine) {
+      issues.push(`El estado «${clean(unknownAvailabilityLine[1])}» no se reconoce; indicá «Disponible» o «Vendido».`);
       continue;
     }
 

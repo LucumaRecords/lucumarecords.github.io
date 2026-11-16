@@ -1,4 +1,4 @@
-import { formatCountryYear, formatPrice } from "./catalogo-core.mjs?v=5";
+import { formatCountryYear, formatPrice } from "./catalogo-core.mjs?v=6";
 
 export function normalizeCartIds(value) {
   if (!Array.isArray(value)) return [];

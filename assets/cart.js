@@ -1,4 +1,4 @@
-import { formatPrice, validateCatalog } from "./catalogo-core.mjs?v=5";
+import { formatPrice, validateCatalog } from "./catalogo-core.mjs?v=6";
 import { buildCartWhatsAppMessage, canAddProduct, formatCartEdition, normalizeCartIds, reconcileCartIds, summarizeCart } from "./cart-core.mjs?v=1";
 
 const STORAGE_KEY = "lucuma-records-cart-v1";
@@ -90,11 +90,11 @@ function updateAddButtons() {
     const title = button.dataset.cartTitle || "este vinilo";
     const inCart = cartIds.includes(id);
     const canAdd = availability === "available";
-    button.textContent = inCart ? "EN EL CARRITO" : canAdd ? "AGREGAR AL CARRITO" : availability === "sold" ? "VENDIDO" : "NO DISPONIBLE";
-    button.disabled = inCart || !canAdd;
-    button.setAttribute("aria-label", inCart
-      ? `${title}, ya está en el carrito`
-      : canAdd ? `Agregar ${title} al carrito` : `${title}, no disponible para agregar`);
+    button.textContent = !canAdd ? "NO DISPONIBLE" : inCart ? "EN EL CARRITO" : "AGREGAR AL CARRITO";
+    button.disabled = !canAdd || inCart;
+    button.setAttribute("aria-label", !canAdd
+      ? `${title}, no disponible para agregar`
+      : inCart ? `${title}, ya está en el carrito` : `Agregar ${title} al carrito`);
     button.classList.toggle("is-added", inCart);
   });
 }

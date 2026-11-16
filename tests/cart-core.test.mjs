@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildCartWhatsAppMessage, canAddProduct, formatCartEdition, normalizeCartIds, reconcileCartIds, summarizeCart } from "../assets/cart-core.mjs";
+import { AVAILABILITY, normalizeCatalogProduct } from "../assets/catalogo-core.mjs";
 
 const available = (overrides = {}) => ({
   id: "record-a",
@@ -21,9 +22,16 @@ test("normaliza IDs del carrito y elimina repeticiones sin alterar el orden", ()
 
 test("solo permite agregar ejemplares publicados y disponibles", () => {
   assert.equal(canAddProduct(available()), true);
-  assert.equal(canAddProduct(available({ availability: "reserved" })), false);
   assert.equal(canAddProduct(available({ availability: "sold" })), false);
+  assert.equal(canAddProduct(available({ availability: "reserved" })), false);
   assert.equal(canAddProduct(available({ published: false })), false);
+});
+
+test("conserva el estado reservado antiguo sin permitir tratarlo como vendido", () => {
+  assert.deepEqual(AVAILABILITY, { available: "Disponible", sold: "Vendido" });
+  const legacy = normalizeCatalogProduct({ id: "record-legacy", availability: "reserved" });
+  assert.equal(legacy.availability, "reserved");
+  assert.equal(canAddProduct(legacy), false);
 });
 
 test("revalida y retira registros vendidos, no disponibles o ausentes", () => {

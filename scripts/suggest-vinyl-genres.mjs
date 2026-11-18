@@ -1,5 +1,5 @@
 const SEARCH_URL = "https://musicbrainz.org/ws/2/release-group/";
-const USER_AGENT = "LucumaRecordsCatalog/1.0 (https://lucumarecords.github.io/lucuma-records/)";
+const USER_AGENT = "LucumaRecordsCatalog/1.0 (https://lucumarecords.github.io/)";
 const pause = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 let nextRequestAt = 0;
 

@@ -50,6 +50,9 @@ jobs:
             --exclude='_site/' \
             ./ _site/
           node scripts/build-catalog.mjs _site
+          mkdir -p _site/lucuma-records/assets
+          cp -a _site/assets/. _site/lucuma-records/assets/
+          find _site -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.svg' -o -iname '*.mp4' \) -exec cp -a -t _site/lucuma-records/ {} +
 
       - name: Subir artefacto de Pages
         uses: actions/upload-pages-artifact@v3

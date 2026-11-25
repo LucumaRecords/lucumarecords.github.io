@@ -2,11 +2,15 @@
   "id": "618f0872-655a-4b6e-9f46-6340dfeab972",
   "artist": "David Bowie",
   "album": "Pin Ups",
+  "collection": "rock-internacional",
+  "classificationPending": false,
   "country": "Alemania",
   "year": 1981,
-  "published": false,
   "editionType": "Edición alemana",
   "coverCondition": "EX",
   "vinylCondition": "EX- (leve ondulación no afecta la reproducción)",
-  "priceARS": 55000
+  "priceARS": 55000,
+  "availability": "available",
+  "published": true,
+  "cover": "assets/catalogo/bowie.jpg"
 }

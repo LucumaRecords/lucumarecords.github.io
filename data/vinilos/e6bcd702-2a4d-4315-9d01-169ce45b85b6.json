@@ -2,11 +2,16 @@
   "id": "e6bcd702-2a4d-4315-9d01-169ce45b85b6",
   "artist": "Johnny Winter",
   "album": "Austin Texas",
+  "genre": "Blues",
+  "collection": "rock-internacional",
+  "classificationPending": false,
   "country": "Brasil",
   "year": 1974,
-  "published": false,
   "editionType": "Edición brasileña",
   "coverCondition": "VG+",
   "vinylCondition": "EX-/EX",
-  "priceARS": 35000
+  "priceARS": 35000,
+  "availability": "available",
+  "published": true,
+  "cover": "assets/catalogo/winter.jpg"
 }

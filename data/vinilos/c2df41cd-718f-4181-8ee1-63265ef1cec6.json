@@ -11,5 +11,6 @@
   "vinylCondition": "EX",
   "priceARS": 60000,
   "availability": "available",
-  "published": true
+  "published": true,
+  "cover": "assets/catalogo/acdc.jpg"
 }

@@ -1,12 +1,15 @@
 {
   "id": "c2df41cd-718f-4181-8ee1-63265ef1cec6",
-  "artist": "AC⚡️DC",
+  "artist": "ACDC",
   "album": "Powerage",
+  "collection": "hard-rock-metal",
+  "classificationPending": false,
   "country": "Argentina",
   "year": 1978,
-  "published": false,
   "editionType": "Edición nacional",
   "coverCondition": "EX-",
   "vinylCondition": "EX",
-  "priceARS": 60000
+  "priceARS": 60000,
+  "availability": "available",
+  "published": true
 }
